@@ -14,9 +14,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Connect to MongoDB
-const mongoUri = 'mongodb+srv://Irfan2k10:straight@cluster0.xuc5gvw.mongodb.net/FCEC?retryWrites=true&w=majority';
-mongoose.connect(mongoUri)
-
+const mongoUri = process.env.MONGODB_URI; // <-- Change is here
+if (!mongoUri) {
+  console.error('MONGODB_URI is not defined.');
+  process.exit(1); // Exit the application if the URI is not defined
+}
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => console.log('Connected to MongoDB...'))
 .catch(err => console.error('Could not connect to MongoDB...', err));
 
